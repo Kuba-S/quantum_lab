@@ -20,6 +20,16 @@ class ProgrammingLanguage
         $this->name = $name;
     }
 
+    public static function fromArray($language)
+    {
+        return new static($language['id'], $language['name']);
+    }
+
+    public static function create($name): ProgrammingLanguage
+    {
+        return new static(rand(1, 10000000), $name);
+    }
+
     /**
      * @return int
      */
@@ -35,5 +45,4 @@ class ProgrammingLanguage
     {
         return $this->name;
     }
-
 }

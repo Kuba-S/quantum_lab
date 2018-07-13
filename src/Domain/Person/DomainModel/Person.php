@@ -13,24 +13,23 @@ class Person
     /**
      * @var string
      */
-    private $firstName;
-
-    /**
-     * @var string
-     */
-    private $lastName;
+    private $name;
 
     /**
      * @var array
      */
     private $programmingLanguages;
 
-    public function __construct(int $id, string $firstName, string $lastName, array $programmingLanguages)
+    public function __construct(int $id, string $name, array $programmingLanguages)
     {
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->programmingLanguages = $programmingLanguages;
         $this->id = $id;
+        $this->name = $name;
+        $this->programmingLanguages = $programmingLanguages;
+    }
+
+    public static function create(string $name, array $programmingLanguages)
+    {
+        return new self(rand(1, 10000000), $name, $programmingLanguages);
     }
 
     /**
@@ -44,17 +43,9 @@ class Person
     /**
      * @return string
      */
-    public function getFirstName(): string
+    public function getName(): string
     {
-        return $this->firstName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLastName(): string
-    {
-        return $this->lastName;
+        return $this->name;
     }
 
     /**

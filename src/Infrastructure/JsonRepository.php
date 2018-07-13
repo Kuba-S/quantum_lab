@@ -34,31 +34,28 @@ class JsonRepository
         return self::$instance;
     }
 
-    public function add(string $tableKey, int $id, array $parameters): void
+    public function add(string $tableKey, array $data): void
     {
         $this->validateTableKey($tableKey);
-        if (isset($jsonData[$tableKey][$id])) {
-            throw new \InvalidArgumentException('Id: "' . $id . '" already exists.');
+
+        if (isset($data['id'])) {
+            if ($data['id'] !== null && isset($jsonData[$tableKey][$data['id']])) {
+                throw new \InvalidArgumentException('Id: "' . $data['id'] . '" already exists.');
+            }
+            $this->dbData[$tableKey][$data['id']] = $data;
+        } else {
+            $this->dbData[$tableKey][] = $data;
         }
-        $this->dbData[$tableKey][$id] = $parameters;
     }
 
     public function update(string $tableKey, int $id, array $parameters): void
     {
-        $this->validateTableKey($tableKey);
-        if (!isset($this->dbData[$tableKey][$id])) {
-            throw new \InvalidArgumentException('Id: "' . $id . '" doesn\'t exists.');
-        }
-        $this->dbData[$tableKey][$id] = $parameters;
+        // TODO: Implement update() method.
     }
 
-    public function delete(string $tableKey, int $id): void
+    public function delete(string $tableKey, string $parameter, string $value): void
     {
-        $this->validateTableKey($tableKey);
-        if (!isset($this->dbData[$id])) {
-            throw new \InvalidArgumentException('Id: "' . $id . '" doesn\'t exists.');
-        }
-        unset($this->dbData[$tableKey][$id]);
+        // TODO: Implement update() method.
     }
 
     public function getAll(string $tableKey): array
@@ -68,18 +65,22 @@ class JsonRepository
         return $this->dbData[$tableKey];
     }
 
-    public function findBy(string $tableKey, string $parameter, string $searchedString): array
+    public function findBy(string $tableKey, string $parameter, string $searchedString, bool $wildcard = false): array
     {
         $this->validateTableKey($tableKey);
         if (!isset($this->dbData[$parameter])) {
             throw new \InvalidArgumentException('Parameter: "' . $parameter . '" doesn\'t exists.');
         }
 
-        $foundRecords = array_filter(array_column($this->dbData[$tableKey], $parameter, 'id'), function ($value) use ($searchedString) {
-            return false !== strpos(strtolower($value), strtolower($searchedString));
+        $foundRecords = array_filter(array_column($this->dbData[$tableKey], $parameter), function ($value) use ($searchedString, $wildcard) {
+            if ($wildcard) {
+                return false !== strpos(strtolower($value), strtolower($searchedString));
+            } else {
+                return strtolower($value) === strtolower($searchedString);
+            }
         });
 
-        return array_intersect_key($this->dbData[$tableKey], $foundRecords);
+        return array_intersect_key($this->dbData[$tableKey], array_flip(array_intersect_key(array_keys($this->dbData[$tableKey]), $foundRecords)));
     }
 
     private function loadData(): void

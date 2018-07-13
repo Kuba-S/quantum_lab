@@ -1,25 +1,25 @@
 <?php
 declare(strict_types=1);
 
-namespace QL\Infrastructure;
+namespace QL\Domain\Person\Infrastructure;
 
 use QL\Domain\Person\DomainModel\Person;
 use QL\Domain\Person\DomainModel\ProgrammingLanguage;
 
-class JsonParamsStrategy
+class TableNamesStrategy
 {
     public const PERSON_KEY = 'person';
     public const PERSON_PROGRAMMING_LANGUAGE_RELATION_KEY = 'person_programming_languages';
     public const PROGRAMMING_LANGUAGE_KEY = 'programming_languages';
 
-    private $jsonKey = '';
+    private $tableKey;
 
     public function __construct(object $object)
     {
         if ($object instanceof Person) {
-            $this->jsonKey = self::PERSON_KEY;
+            $this->tableKey = self::PERSON_KEY;
         } elseif ($object instanceof ProgrammingLanguage) {
-            $this->jsonKey = self::PROGRAMMING_LANGUAGE_KEY;
+            $this->tableKey = self::PROGRAMMING_LANGUAGE_KEY;
         }
     }
 
@@ -28,8 +28,8 @@ class JsonParamsStrategy
         return self::PERSON_PROGRAMMING_LANGUAGE_RELATION_KEY;
     }
 
-    public function getKey(): string
+    public function getTableKey(): string
     {
-        return $this->jsonKey;
+        return $this->tableKey;
     }
 }
