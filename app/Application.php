@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use QL\Command\CliRequest;
+use QL\Command\Mappable;
 
 class Application
 {
@@ -37,14 +38,15 @@ class Application
         $handlerMethod = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['method'];
         $methodArguments = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['mapTo'] ?? $cliRequest->getArguments();
 
-
         $handlerClassInstance = new $handlerClass();
         $handlerMethod .= 'Action';
 
-        if ($methodArguments && $methodArguments instanceof Mappable) {
+        if ($methodArguments && is_a((string) $methodArguments, Mappable::class, true)) {
             $methodArguments = $methodArguments::fromCliParams($cliRequest->getArguments());
         }
-        $handlerClassInstance->$handlerMethod($methodArguments);
+
+        $response = $handlerClassInstance->$handlerMethod($methodArguments);
+        $this->presentOutput($response);
     }
 
     private function loadConfiguration(): void

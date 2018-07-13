@@ -5,9 +5,9 @@
       "method": "Find"
     },
     "find": {
-      "class": "\\SomeController",
-      "method": "Find",
-      "mapTo": "\\SomeObject"
+      "class": "QL\\Domain\\Person\\ReadModel\\FindPersonHandler",
+      "method": "findByString",
+      "mapTo": "QL\\Domain\\Person\\ReadModel\\FindPersonByStringQuery"
     },
     "languages": {
       "class": "\\SomeController",
