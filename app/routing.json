@@ -1,8 +1,8 @@
 {
   "cli": {
     "list": {
-      "class": "\\SomeController",
-      "method": "Find"
+      "class": "QL\\Domain\\Person\\ReadModel\\FindPersonHandler",
+      "method": "getAllPeople"
     },
     "find": {
       "class": "QL\\Domain\\Person\\ReadModel\\FindPersonHandler",

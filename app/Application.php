@@ -46,6 +46,7 @@ class Application
         }
 
         $response = $handlerClassInstance->$handlerMethod($methodArguments);
+
         $this->presentOutput($response);
     }
 
