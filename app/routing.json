@@ -1,0 +1,37 @@
+{
+  "cli": {
+    "list": {
+      "class": "\\SomeController",
+      "method": "Find"
+    },
+    "find": {
+      "class": "\\SomeController",
+      "method": "Find",
+      "mapTo": "\\SomeObject"
+    },
+    "languages": {
+      "class": "\\SomeController",
+      "mapTo": "\\SomeObject"
+    },
+    "addPerson": {
+      "class": "\\SomeController",
+      "mapTo": "\\SomeObject"
+    },
+    "updatePerson": {
+      "class": "\\SomeController",
+      "mapTo": "\\SomeObject"
+    },
+    "removePerson": {
+      "class": "\\SomeController",
+      "mapTo": "\\SomeObject"
+    },
+    "addLanguage": {
+      "class": "\\SomeController",
+      "mapTo": "\\SomeObject"
+    },
+    "removeLanguage": {
+      "class": "\\SomeController",
+      "mapTo": "\\SomeObject"
+    }
+  }
+}

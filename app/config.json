@@ -1,0 +1,8 @@
+{
+  "db": {
+    "type": "file",
+    "parameters": {
+      "file": "db.json"
+    }
+  }
+}
