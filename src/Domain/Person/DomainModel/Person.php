@@ -6,7 +6,7 @@ namespace QL\Domain\Person\DomainModel;
 class Person
 {
     /**
-     * @var int
+     * @var string
      */
     private $id;
 
@@ -20,7 +20,7 @@ class Person
      */
     private $programmingLanguages;
 
-    public function __construct(int $id, string $name, array $programmingLanguages)
+    public function __construct(string $id, string $name, array $programmingLanguages)
     {
         $this->id = $id;
         $this->name = $name;
@@ -29,13 +29,13 @@ class Person
 
     public static function create(string $name, array $programmingLanguages)
     {
-        return new self(rand(1, 10000000), $name, $programmingLanguages);
+        return new self(md5((string) mt_rand()), $name, $programmingLanguages);
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getId(): int
+    public function getId(): string
     {
         return $this->id;
     }

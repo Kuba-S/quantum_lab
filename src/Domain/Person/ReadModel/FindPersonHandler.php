@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace QL\Domain\Person\ReadModel;
 
+use QL\Domain\Person\DomainModel\PersonFormatter;
+use QL\Domain\Person\Infrastructure\PersonRepository;
+
 class FindPersonHandler
 {
     /**
@@ -15,13 +18,13 @@ class FindPersonHandler
         $this->personRepository = $personRepository;
     }
 
-    public function getAllPeopleAction(): array
+    public function getAllPeopleAction()
     {
         return $this->personRepository->getAllPeople();
     }
 
-    public function findByStringAction(FindPersonByStringQuery $findPersonByStringQuery): string
+    public function findByNameAction(FindPersonByNameQuery $findPersonByStringQuery)
     {
-        return $findPersonByStringQuery->getSearchString();
+        return $this->personRepository->searchPersonByName($findPersonByStringQuery->getSearchString());
     }
 }

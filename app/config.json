@@ -1,8 +1,5 @@
 {
   "db": {
-    "type": "file",
-    "parameters": {
-      "file": "/Volumes/test/projektyPhp/QuantumLab/db.json"
-    }
+    "file": "/Volumes/test/projektyPhp/QuantumLab/db.json"
   }
 }

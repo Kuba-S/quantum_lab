@@ -6,7 +6,7 @@ namespace QL\Domain\Person\Infrastructure;
 use QL\Domain\Person\DomainModel\Person;
 use QL\Domain\Person\DomainModel\ProgrammingLanguage;
 
-class AddStrategy
+class CommandStrategy
 {
     /**
      * @var object
@@ -31,7 +31,7 @@ class AddStrategy
             foreach ($this->object->getProgrammingLanguages() as $programmingLanguage) {
                 $dataToPersist[] = [
                     'tableName' => TableNamesStrategy::PERSON_PROGRAMMING_LANGUAGE_RELATION_KEY,
-                    'data' => ['id' => $this->object->getId(), 'person_id' => $this->object->getId(), 'programming_language_id' => $programmingLanguage->getId()],
+                    'data' => ['person_id' => $this->object->getId(), 'programming_language_id' => $programmingLanguage->getId()],
                 ];
             }
             return $dataToPersist;

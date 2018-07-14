@@ -6,15 +6,16 @@ namespace QL\Domain\Person\DomainModel;
 class ProgrammingLanguage
 {
     /**
-     * @var int
+     * @var string
      */
     private $id;
+
     /**
      * @var string
      */
     private $name;
 
-    public function __construct(int $id, string $name)
+    public function __construct(string $id, string $name)
     {
         $this->id = $id;
         $this->name = $name;
@@ -27,13 +28,11 @@ class ProgrammingLanguage
 
     public static function create($name): ProgrammingLanguage
     {
-        return new static(rand(1, 10000000), $name);
+        return new static(md5((string) mt_rand()), $name);
     }
 
-    /**
-     * @return int
-     */
-    public function getId(): int
+
+    public function getId(): string
     {
         return $this->id;
     }

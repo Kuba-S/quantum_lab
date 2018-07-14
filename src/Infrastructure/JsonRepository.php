@@ -3,13 +3,8 @@ declare(strict_types=1);
 
 namespace QL\Infrastructure;
 
-class JsonRepository
+class JsonRepository implements Repository
 {
-    /**
-     * @var JsonRepository
-     */
-    private static $instance;
-
     /**
      * @var string
      */
@@ -20,18 +15,10 @@ class JsonRepository
      */
     private $dbData;
 
-    private function __construct(string $jsonFilePath)
+    public function __construct(string $jsonFilePath)
     {
         $this->jsonFilePath = $jsonFilePath;
         $this->loadData();
-    }
-
-    public static function getInstance(string $jsonFilePath): JsonRepository
-    {
-        if (self::$instance === null) {
-            self::$instance = new self($jsonFilePath);
-        }
-        return self::$instance;
     }
 
     public function add(string $tableKey, array $data): void
@@ -48,7 +35,7 @@ class JsonRepository
         }
     }
 
-    public function update(string $tableKey, int $id, array $parameters): void
+    public function update(string $tableKey, string $id, array $parameters): void
     {
         // TODO: Implement update() method.
     }
@@ -68,9 +55,6 @@ class JsonRepository
     public function findBy(string $tableKey, string $parameter, string $searchedString, bool $wildcard = false): array
     {
         $this->validateTableKey($tableKey);
-        if (!isset($this->dbData[$parameter])) {
-            throw new \InvalidArgumentException('Parameter: "' . $parameter . '" doesn\'t exists.');
-        }
 
         $foundRecords = array_filter(array_column($this->dbData[$tableKey], $parameter), function ($value) use ($searchedString, $wildcard) {
             if ($wildcard) {
@@ -80,7 +64,7 @@ class JsonRepository
             }
         });
 
-        return array_intersect_key($this->dbData[$tableKey], array_flip(array_intersect_key(array_keys($this->dbData[$tableKey]), $foundRecords)));
+        return array_values(array_intersect_key($this->dbData[$tableKey], array_flip(array_intersect_key(array_keys($this->dbData[$tableKey]), $foundRecords))));
     }
 
     private function loadData(): void

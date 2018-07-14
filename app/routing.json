@@ -2,20 +2,24 @@
   "cli": {
     "list": {
       "class": "QL\\Domain\\Person\\ReadModel\\FindPersonHandler",
-      "method": "getAllPeople"
+      "method": "getAllPeople",
+      "formatter": "QL\\Formatter\\PersonCliFormatter"
     },
     "find": {
       "class": "QL\\Domain\\Person\\ReadModel\\FindPersonHandler",
-      "method": "findByString",
-      "mapTo": "QL\\Domain\\Person\\ReadModel\\FindPersonByStringQuery"
+      "method": "findByName",
+      "mapTo": "QL\\Domain\\Person\\ReadModel\\FindPersonByNameQuery",
+      "formatter": "QL\\Formatter\\PersonCliFormatter"
     },
     "languages": {
       "class": "\\SomeController",
       "mapTo": "\\SomeObject"
     },
     "addPerson": {
-      "class": "\\SomeController",
-      "mapTo": "\\SomeObject"
+      "class": "QL\\Domain\\Person\\Command\\AddPersonCommandHandler",
+      "method": "addPerson",
+      "mapTo": "QL\\Domain\\Person\\Command\\AddPersonCommand",
+      "formatter": "QL\\Formatter\\PersonCliFormatter"
     },
     "updatePerson": {
       "class": "\\SomeController",

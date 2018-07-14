@@ -5,7 +5,7 @@ namespace QL\Domain\Person\ReadModel;
 
 use QL\Command\Mappable;
 
-class FindPersonByStringQuery implements Mappable
+class FindPersonByNameQuery implements Mappable
 {
     /**
      * @var string

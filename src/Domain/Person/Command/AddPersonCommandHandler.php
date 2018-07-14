@@ -5,15 +5,16 @@ namespace QL\Domain\Person\Command;
 
 use QL\Domain\Person\DomainModel\Person;
 use QL\Domain\Person\DomainModel\ProgrammingLanguage;
+use QL\Domain\Person\Infrastructure\PersonRepository;
 
 class AddPersonCommandHandler
 {
     /**
-     * @var CommandPersonRepository
+     * @var PersonRepository
      */
     private $personRepository;
 
-    public function __construct(CommandPersonRepository $personRepository)
+    public function __construct(PersonRepository $personRepository)
     {
         $this->personRepository = $personRepository;
     }
@@ -26,7 +27,7 @@ class AddPersonCommandHandler
         $programmingLanguagesList = [];
         foreach ($addPersonCommand->getProgrammingLanguageList() as $name) {
             $programmingLanguage = $this->personRepository->getProgrammingLanguageByName($name);
-            if ($programmingLanguagesList === null) {
+            if ($programmingLanguage === null) {
                 $programmingLanguage = $this->personRepository->persist(ProgrammingLanguage::create($name));
             }
             $programmingLanguagesList[] = $programmingLanguage;
