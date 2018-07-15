@@ -20,6 +20,10 @@ class RemovePersonCommandHandler
     public function removePersonAction(RemovePersonCommand $removePersonCommand)
     {
         $person = $this->personRepository->getPersonById($removePersonCommand->getId());
+        if (empty($person)) {
+            throw new \InvalidArgumentException('Person with Id: "' . $removePersonCommand->getId() . '" doesn\'t exists.');
+        }
+
         $this->personRepository->remove($person);
     }
 }

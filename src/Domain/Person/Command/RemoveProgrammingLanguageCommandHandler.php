@@ -19,7 +19,11 @@ class RemoveProgrammingLanguageCommandHandler
 
     public function removeProgrammingLanguageAction(RemoveProgrammingLanguageCommand $removeProgrammingLanguageCommand)
     {
-        $person = $this->personRepository->getProgrammingLanguageByName($removeProgrammingLanguageCommand->getName());
-        $this->personRepository->remove($person);
+        $programmingLanguage = $this->personRepository->getProgrammingLanguageByName($removeProgrammingLanguageCommand->getName());
+        if (empty($programmingLanguage)) {
+            throw new \InvalidArgumentException('Programming language: "' . $removeProgrammingLanguageCommand->getName() . '" doesn\'t exists.');
+        }
+
+        $this->personRepository->remove($programmingLanguage);
     }
 }
