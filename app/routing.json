@@ -28,12 +28,14 @@
       "mapTo": "QL\\Domain\\Person\\Command\\RemovePersonCommand"
     },
     "addLanguage": {
-      "class": "\\SomeController",
-      "mapTo": "\\SomeObject"
+      "class": "QL\\Domain\\Person\\Command\\AddProgrammingLanguageCommandHandler",
+      "method": "addProgrammingLanguage",
+      "mapTo": "QL\\Domain\\Person\\Command\\AddProgrammingLanguageCommand"
     },
     "removeLanguage": {
-      "class": "\\SomeController",
-      "mapTo": "\\SomeObject"
+      "class": "QL\\Domain\\Person\\Command\\RemoveProgrammingLanguageCommandHandler",
+      "method": "removeProgrammingLanguage",
+      "mapTo": "QL\\Domain\\Person\\Command\\RemoveProgrammingLanguageCommand"
     }
   }
 }

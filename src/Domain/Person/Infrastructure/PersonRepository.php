@@ -108,7 +108,7 @@ class PersonRepository
         if (empty($languagesList)) {
             return null;
         } else {
-            return ProgrammingLanguage::fromArray($languagesList[0]);
+            return ProgrammingLanguage::fromArray(array_shift($languagesList));
         }
     }
 
