@@ -19,7 +19,7 @@ class AddPersonCommandHandler
         $this->personRepository = $personRepository;
     }
 
-    public function addPersonAction(AddPersonCommand $addPersonCommand): void
+    public function addPersonAction(AddPersonCommand $addPersonCommand): string
     {
         $programmingLanguagesList = [];
         foreach ($addPersonCommand->getProgrammingLanguageList() as $name) {
@@ -33,5 +33,6 @@ class AddPersonCommandHandler
         $person = Person::create($addPersonCommand->getFirstName() . ' ' . $addPersonCommand->getLastName(), $programmingLanguagesList);
 
         $this->personRepository->persist($person);
+        return 'OK';
     }
 }

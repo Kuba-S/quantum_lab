@@ -18,7 +18,7 @@ class RemoveProgrammingLanguageCommandHandler
         $this->personRepository = $personRepository;
     }
 
-    public function removeProgrammingLanguageAction(RemoveProgrammingLanguageCommand $removeProgrammingLanguageCommand): void
+    public function removeProgrammingLanguageAction(RemoveProgrammingLanguageCommand $removeProgrammingLanguageCommand): string
     {
         $programmingLanguage = $this->personRepository->getProgrammingLanguageByName($removeProgrammingLanguageCommand->getName());
         if (empty($programmingLanguage)) {
@@ -26,5 +26,6 @@ class RemoveProgrammingLanguageCommandHandler
         }
 
         $this->personRepository->remove($programmingLanguage);
+        return 'OK';
     }
 }

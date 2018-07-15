@@ -33,26 +33,26 @@ class Application
 
     public function handleCliRequest(CliRequest $cliRequest): void
     {
-        if (!isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()])) {
-            $this->presentOutput('No defined routing for command "' . $cliRequest->getCommandName() . '".');
-        }
-
-        if (!isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['class'])) {
-            $this->presentOutput('No defined handler for routing "' . $cliRequest->getCommandName() . '".');
-        }
-
-        if (!isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['method'])) {
-            $this->presentOutput('No defined method for routing "' . $cliRequest->getCommandName() . '".');
-        }
-
-        $handlerClass = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['class'];
-        $handlerMethod = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['method'];
-        $methodArguments = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['mapTo'] ?? $cliRequest->getArguments();
-        $validatorClassName = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['validator'] ?? null;
-        $handlerClassInstance = new $handlerClass(new PersonRepository($this->repository));
-        $handlerMethod .= 'Action';
-
         try {
+            if (!isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()])) {
+                throw new \InvalidArgumentException('No defined routing for command "' . $cliRequest->getCommandName() . '".');
+            }
+
+            if (!isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['class'])) {
+                throw new \InvalidArgumentException('No defined handler for routing "' . $cliRequest->getCommandName() . '".');
+            }
+
+            if (!isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['method'])) {
+                throw new \InvalidArgumentException('No defined method for routing "' . $cliRequest->getCommandName() . '".');
+            }
+
+            $handlerClass = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['class'];
+            $handlerMethod = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['method'];
+            $methodArguments = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['mapTo'] ?? $cliRequest->getArguments();
+            $validatorClassName = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['validator'] ?? null;
+            $handlerClassInstance = new $handlerClass(new PersonRepository($this->repository));
+            $handlerMethod .= 'Action';
+
             if ($methodArguments && is_a((string)$methodArguments, Mappable::class, true)) {
                 /** @var Mappable $methodArguments */
                 $methodArguments = $methodArguments::fromCliParams($cliRequest->getArguments());
@@ -65,12 +65,9 @@ class Application
             }
 
             $response = $handlerClassInstance->$handlerMethod($methodArguments);
-            if (
-                isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['formatter'])
-                && is_a((string)$this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['formatter'],
-                    Formatter::class, true)
-            ) {
-                $formatterClassName = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['formatter'];
+
+            $formatterClassName = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['formatter'] ?? null;
+            if ($formatterClassName && is_a((string) $formatterClassName, Formatter::class, true)) {
                 /** @var Formatter $formatter */
                 $formatter = new $formatterClassName();
                 $response = is_array($response) ? $formatter->formatMany($response) : $formatter->formatOne($response);

@@ -9,6 +9,12 @@ use QL\Infrastructure\Repository;
 
 class PersonRepository
 {
+    public const PERSON_TABLE_NAME = 'person';
+
+    public const PERSON_PROGRAMMING_LANGUAGE_RELATION_TABLE_NAME = 'person_programming_languages';
+
+    public const PROGRAMMING_LANGUAGE_TABLE_NAME = 'programming_languages';
+
     /**
      * @var Repository
      */
@@ -31,7 +37,7 @@ class PersonRepository
 
     public function getPersonById(string $id): Person
     {
-        $person = $this->repository->findBy(TableNamesStrategy::PERSON_KEY, 'id', $id, true);
+        $person = $this->repository->findBy(static::PERSON_TABLE_NAME, 'id', $id, true);
         if (!empty($person)) {
             return $this->buildPersonWithRelations(array_shift($person));
         }
@@ -41,9 +47,9 @@ class PersonRepository
     private function searchPerson(string $parameterName = null, string $searchValue = null): array
     {
         if ($parameterName === null) {
-            $people = $this->repository->getAll(TableNamesStrategy::PERSON_KEY);
+            $people = $this->repository->getAll(static::PERSON_TABLE_NAME);
         } else {
-            $people = $this->repository->findBy(TableNamesStrategy::PERSON_KEY, 'name', $searchValue, true);
+            $people = $this->repository->findBy(static::PERSON_TABLE_NAME, 'name', $searchValue, true);
         }
         $personList = [];
         foreach ($people as $person) {
@@ -55,9 +61,9 @@ class PersonRepository
     private function buildPersonWithRelations(array $person): Person
     {
         $programmingLanguages = [];
-        $personProgrammingLanguageRelation = $this->repository->findBy(TableNamesStrategy::PERSON_PROGRAMMING_LANGUAGE_RELATION_KEY, 'person_id', $person['id']);
+        $personProgrammingLanguageRelation = $this->repository->findBy(static::PERSON_PROGRAMMING_LANGUAGE_RELATION_TABLE_NAME, 'person_id', $person['id']);
         foreach ($personProgrammingLanguageRelation as $relation) {
-            $languagesList = $this->repository->findBy(TableNamesStrategy::PROGRAMMING_LANGUAGE_KEY, 'id', $relation['programming_language_id']);
+            $languagesList = $this->repository->findBy(static::PROGRAMMING_LANGUAGE_TABLE_NAME, 'id', $relation['programming_language_id']);
             $programmingLanguages[] = ProgrammingLanguage::fromArray(array_shift($languagesList));
         }
         return new Person($person['id'], $person['name'], $programmingLanguages);
@@ -83,10 +89,20 @@ class PersonRepository
         return $matchedPersonList;
     }
 
+    public function getProgrammingLanguageByName(string $name): ?ProgrammingLanguage
+    {
+        $languagesList = $this->repository->findBy(static::PROGRAMMING_LANGUAGE_TABLE_NAME, 'name', $name, false);
+        if (empty($languagesList)) {
+            return null;
+        } else {
+            return ProgrammingLanguage::fromArray(array_shift($languagesList));
+        }
+    }
+
     public function persist(object $object): object
     {
-        $persistStrategy = new CommandStrategy($object);
-        foreach ($persistStrategy->dataToPersist() as $data) {
+        $persistStrategy = new RelationsStrategy($object);
+        foreach ($persistStrategy->add() as $data) {
             $this->repository->add($data['tableName'], $data['data']);
         }
         $this->repository->flush();
@@ -95,21 +111,10 @@ class PersonRepository
 
     public function remove(object $object): void
     {
-        $persistStrategy = new CommandStrategy($object);
-        foreach ($persistStrategy->dataToRemove() as $data) {
+        $persistStrategy = new RelationsStrategy($object);
+        foreach ($persistStrategy->remove() as $data) {
             $this->repository->delete($data['tableName'], $data['data']['parameter'], $data['data']['value']);
         }
         $this->repository->flush();
     }
-
-    public function getProgrammingLanguageByName(string $name): ?ProgrammingLanguage
-    {
-        $languagesList = $this->repository->findBy(TableNamesStrategy::PROGRAMMING_LANGUAGE_KEY, 'name', $name, false);
-        if (empty($languagesList)) {
-            return null;
-        } else {
-            return ProgrammingLanguage::fromArray(array_shift($languagesList));
-        }
-    }
-
 }

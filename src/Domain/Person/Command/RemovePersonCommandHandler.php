@@ -18,7 +18,7 @@ class RemovePersonCommandHandler
         $this->personRepository = $personRepository;
     }
 
-    public function removePersonAction(RemovePersonCommand $removePersonCommand): void
+    public function removePersonAction(RemovePersonCommand $removePersonCommand): string
     {
         $person = $this->personRepository->getPersonById($removePersonCommand->getId());
         if (empty($person)) {
@@ -26,5 +26,6 @@ class RemovePersonCommandHandler
         }
 
         $this->personRepository->remove($person);
+        return 'OK';
     }
 }

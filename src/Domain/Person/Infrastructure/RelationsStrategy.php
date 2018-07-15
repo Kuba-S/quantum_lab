@@ -6,7 +6,7 @@ namespace QL\Domain\Person\Infrastructure;
 use QL\Domain\Person\DomainModel\Person;
 use QL\Domain\Person\DomainModel\ProgrammingLanguage;
 
-class CommandStrategy
+class RelationsStrategy
 {
     /**
      * @var object
@@ -18,19 +18,19 @@ class CommandStrategy
         $this->object = $object;
     }
 
-    public function dataToPersist(): array
+    public function add(): array
     {
         if ($this->object instanceof Person) {
             $dataToPersist = [
                 [
-                    'tableName' => TableNamesStrategy::PERSON_KEY,
+                    'tableName' => PersonRepository::PERSON_TABLE_NAME,
                     'data' => ['id' => $this->object->getId(), 'name' => $this->object->getName()],
                 ]
             ];
             /** @var ProgrammingLanguage $programmingLanguage */
             foreach ($this->object->getProgrammingLanguages() as $programmingLanguage) {
                 $dataToPersist[] = [
-                    'tableName' => TableNamesStrategy::PERSON_PROGRAMMING_LANGUAGE_RELATION_KEY,
+                    'tableName' => PersonRepository::PERSON_PROGRAMMING_LANGUAGE_RELATION_TABLE_NAME,
                     'data' => ['person_id' => $this->object->getId(), 'programming_language_id' => $programmingLanguage->getId()],
                 ];
             }
@@ -38,23 +38,23 @@ class CommandStrategy
         } elseif ($this->object instanceof ProgrammingLanguage) {
             return [
                 [
-                    'tableName' => TableNamesStrategy::PROGRAMMING_LANGUAGE_KEY,
+                    'tableName' => PersonRepository::PROGRAMMING_LANGUAGE_TABLE_NAME,
                     'data' => ['id' => $this->object->getId(), 'name' => $this->object->getName()],
                 ]
             ];
         }
     }
 
-    public function dataToRemove(): array
+    public function remove(): array
     {
         if ($this->object instanceof Person) {
             $dataToPersist = [
                 [
-                    'tableName' => TableNamesStrategy::PERSON_KEY,
+                    'tableName' => PersonRepository::PERSON_TABLE_NAME,
                     'data' => ['parameter' => 'id', 'value' => $this->object->getId()],
                 ],
                 [
-                    'tableName' => TableNamesStrategy::PERSON_PROGRAMMING_LANGUAGE_RELATION_KEY,
+                    'tableName' => PersonRepository::PERSON_PROGRAMMING_LANGUAGE_RELATION_TABLE_NAME,
                     'data' => ['parameter' => 'person_id', 'value' => $this->object->getId()],
                 ]
             ];
@@ -62,7 +62,7 @@ class CommandStrategy
         } elseif ($this->object instanceof ProgrammingLanguage) {
             return [
                 [
-                    'tableName' => TableNamesStrategy::PROGRAMMING_LANGUAGE_KEY,
+                    'tableName' => PersonRepository::PROGRAMMING_LANGUAGE_TABLE_NAME,
                     'data' => ['parameter' => 'id', 'value' => $this->object->getId()],
                 ]
             ];
