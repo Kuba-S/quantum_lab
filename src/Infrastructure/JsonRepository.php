@@ -42,7 +42,10 @@ class JsonRepository implements Repository
 
     public function delete(string $tableKey, string $parameter, string $value): void
     {
-        // TODO: Implement update() method.
+        $dataToDelete = $this->findBy($tableKey, $parameter, $value);
+        foreach ($dataToDelete as $key => $toDelete) {
+            unset($this->dbData[$tableKey][$key]);
+        }
     }
 
     public function getAll(string $tableKey): array
@@ -64,7 +67,7 @@ class JsonRepository implements Repository
             }
         });
 
-        return array_values(array_intersect_key($this->dbData[$tableKey], array_flip(array_intersect_key(array_keys($this->dbData[$tableKey]), $foundRecords))));
+        return array_intersect_key($this->dbData[$tableKey], array_flip(array_intersect_key(array_keys($this->dbData[$tableKey]), $foundRecords)));
     }
 
     private function loadData(): void

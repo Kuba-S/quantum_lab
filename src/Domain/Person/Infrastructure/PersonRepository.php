@@ -24,34 +24,63 @@ class PersonRepository
         return $this->searchPerson();
     }
 
-    public function searchPersonByName(string $name = null)
+    public function searchPersonByName(string $name = null): array
     {
         return $this->searchPerson('name', $name);
     }
 
-    private function searchPerson(string $parameterName = null, string $searchValue = null)
+    public function getPersonById(string $id): Person
     {
-        $personList = [];
+        $person = $this->repository->findBy(TableNamesStrategy::PERSON_KEY, 'id', $id, true);
+        if (!empty($person)) {
+            return $this->buildPersonWithRelations(array_shift($person));
+        }
+        throw new \LogicException('Person with Id: ' . $id . ' doesn\'t exists.');
+    }
+
+    private function searchPerson(string $parameterName = null, string $searchValue = null):array
+    {
         if ($parameterName === null) {
             $people = $this->repository->getAll(TableNamesStrategy::PERSON_KEY);
         } else {
             $people = $this->repository->findBy(TableNamesStrategy::PERSON_KEY, 'name', $searchValue, true);
         }
+        $personList = [];
         foreach ($people as $person) {
-            $programmingLanguages = [];
-            $personProgrammingLanguageRelation = $this->repository->findBy(TableNamesStrategy::PERSON_PROGRAMMING_LANGUAGE_RELATION_KEY, 'person_id', $person['id']);
-            foreach ($personProgrammingLanguageRelation as $relation) {
-                $languagesList = $this->repository->findBy(TableNamesStrategy::PROGRAMMING_LANGUAGE_KEY, 'id', $relation['programming_language_id']);
-                $programmingLanguages[] = ProgrammingLanguage::fromArray($languagesList[0]);
-            }
-            $personList[] = new Person($person['id'], $person['name'], $programmingLanguages);
+            $personList[] = $this->buildPersonWithRelations($person);
         }
         return $personList;
     }
 
+    private function buildPersonWithRelations(array $person): Person
+    {
+        $programmingLanguages = [];
+        $personProgrammingLanguageRelation = $this->repository->findBy(TableNamesStrategy::PERSON_PROGRAMMING_LANGUAGE_RELATION_KEY, 'person_id', $person['id']);
+        foreach ($personProgrammingLanguageRelation as $relation) {
+            $languagesList = $this->repository->findBy(TableNamesStrategy::PROGRAMMING_LANGUAGE_KEY, 'id', $relation['programming_language_id']);
+            $programmingLanguages[] = ProgrammingLanguage::fromArray(array_shift($languagesList));
+        }
+        return new Person($person['id'], $person['name'], $programmingLanguages);
+    }
+
     public function searchPersonByProgrammingLanguage(array $programmingLanguagesList): array
     {
-        // TODO: Implement search() method.
+        $matchedPersonList = [];
+        $allPeople = $this->getAllPeople();
+        /** @var Person $person */
+        foreach ($allPeople as $person) {
+            $personProgrammingLanguagesList = array_map(function ($programmingLanguage) {
+                    /** @var ProgrammingLanguage $programmingLanguage */
+                    return $programmingLanguage->getName();
+                },
+                $person->getProgrammingLanguages()
+            );
+
+            if (count(array_diff($programmingLanguagesList, $personProgrammingLanguagesList)) === 0) {
+                $matchedPersonList[] = $person;
+            }
+        }
+        return $matchedPersonList;
     }
 
     public function persist(object $object)
@@ -64,16 +93,12 @@ class PersonRepository
         return $object;
     }
 
-    public function update(object $object)
-    {
-        // TODO: Implement update() method.
-
-    }
-
     public function remove(object $object)
     {
-        $tableValues = new TableNamesStrategy($object);
-        $this->repository->delete($tableValues->getTableKey(), 'id', $object->getId());
+        $persistStrategy = new CommandStrategy($object);
+        foreach ($persistStrategy->dataToRemove() as $data) {
+            $this->repository->delete($data['tableName'], $data['data']['parameter'], $data['data']['value']);
+        }
         $this->repository->flush();
     }
 

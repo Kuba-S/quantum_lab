@@ -18,7 +18,7 @@ class CommandStrategy
         $this->object = $object;
     }
 
-    public function dataToPersist()
+    public function dataToPersist(): array
     {
         if ($this->object instanceof Person) {
             $dataToPersist = [
@@ -40,6 +40,30 @@ class CommandStrategy
                 [
                     'tableName' => TableNamesStrategy::PROGRAMMING_LANGUAGE_KEY,
                     'data' => ['id' => $this->object->getId(), 'name' => $this->object->getName()],
+                ]
+            ];
+        }
+    }
+
+    public function dataToRemove(): array
+    {
+        if ($this->object instanceof Person) {
+            $dataToPersist = [
+                [
+                    'tableName' => TableNamesStrategy::PERSON_KEY,
+                    'data' => ['parameter' => 'id', 'value' => $this->object->getId()],
+                ],
+                [
+                    'tableName' => TableNamesStrategy::PERSON_PROGRAMMING_LANGUAGE_RELATION_KEY,
+                    'data' => ['parameter' => 'person_id', 'value' => $this->object->getId()],
+                ]
+            ];
+            return $dataToPersist;
+        } elseif ($this->object instanceof ProgrammingLanguage) {
+            return [
+                [
+                    'tableName' => TableNamesStrategy::PROGRAMMING_LANGUAGE_KEY,
+                    'data' => ['parameter' => 'id', 'value' => $this->object->getId()],
                 ]
             ];
         }

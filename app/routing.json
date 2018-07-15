@@ -7,27 +7,25 @@
     },
     "find": {
       "class": "QL\\Domain\\Person\\ReadModel\\FindPersonHandler",
-      "method": "findByName",
+      "method": "findPersonByName",
       "mapTo": "QL\\Domain\\Person\\ReadModel\\FindPersonByNameQuery",
       "formatter": "QL\\Formatter\\PersonCliFormatter"
     },
     "languages": {
-      "class": "\\SomeController",
-      "mapTo": "\\SomeObject"
+      "class": "QL\\Domain\\Person\\ReadModel\\FindPersonHandler",
+      "method": "findPersonByProgrammingLanguages",
+      "mapTo": "QL\\Domain\\Person\\ReadModel\\FindPersonByProgrammingLanguagesQuery",
+      "formatter": "QL\\Formatter\\PersonCliFormatter"
     },
     "addPerson": {
       "class": "QL\\Domain\\Person\\Command\\AddPersonCommandHandler",
       "method": "addPerson",
-      "mapTo": "QL\\Domain\\Person\\Command\\AddPersonCommand",
-      "formatter": "QL\\Formatter\\PersonCliFormatter"
-    },
-    "updatePerson": {
-      "class": "\\SomeController",
-      "mapTo": "\\SomeObject"
+      "mapTo": "QL\\Domain\\Person\\Command\\AddPersonCommand"
     },
     "removePerson": {
-      "class": "\\SomeController",
-      "mapTo": "\\SomeObject"
+      "class": "QL\\Domain\\Person\\Command\\RemovePersonCommandHandler",
+      "method": "removePerson",
+      "mapTo": "QL\\Domain\\Person\\Command\\RemovePersonCommand"
     },
     "addLanguage": {
       "class": "\\SomeController",

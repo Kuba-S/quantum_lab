@@ -20,6 +20,9 @@ class Person
      */
     private $programmingLanguages;
 
+    /**
+     * @param ProgrammingLanguage[] $programmingLanguages
+     */
     public function __construct(string $id, string $name, array $programmingLanguages)
     {
         $this->id = $id;
@@ -27,6 +30,9 @@ class Person
         $this->programmingLanguages = $programmingLanguages;
     }
 
+    /**
+     * @param ProgrammingLanguage[] $programmingLanguages
+     */
     public static function create(string $name, array $programmingLanguages)
     {
         return new self(md5((string) mt_rand()), $name, $programmingLanguages);
@@ -49,7 +55,7 @@ class Person
     }
 
     /**
-     * @return array
+     * @return ProgrammingLanguage[]
      */
     public function getProgrammingLanguages(): array
     {
