@@ -17,7 +17,7 @@ class RemoveProgrammingLanguageCommandHandler
         $this->personRepository = $personRepository;
     }
 
-    public function removeProgrammingLanguageAction(RemoveProgrammingLanguageCommand $removeProgrammingLanguageCommand)
+    public function removeProgrammingLanguageAction(RemoveProgrammingLanguageCommand $removeProgrammingLanguageCommand): void
     {
         $programmingLanguage = $this->personRepository->getProgrammingLanguageByName($removeProgrammingLanguageCommand->getName());
         if (empty($programmingLanguage)) {

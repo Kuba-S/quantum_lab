@@ -25,7 +25,7 @@ class FindPersonByNameQuery implements Mappable
         return $this->searchString;
     }
 
-    public static function fromCliParams(array $params)
+    public static function fromCliParams(array $params): FindPersonByNameQuery
     {
         if (count($params) !== 1) {
             throw new \InvalidArgumentException('Invalid number of parameters. Must be "1". Given: ' . count($params) . '.');

@@ -19,11 +19,8 @@ class AddPersonCommandHandler
         $this->personRepository = $personRepository;
     }
 
-    public function addPersonAction(AddPersonCommand $addPersonCommand)
+    public function addPersonAction(AddPersonCommand $addPersonCommand): void
     {
-        $validator = new AddPersonCommandValidator();
-        $validator->validate($addPersonCommand);
-
         $programmingLanguagesList = [];
         foreach ($addPersonCommand->getProgrammingLanguageList() as $name) {
             $programmingLanguage = $this->personRepository->getProgrammingLanguageByName($name);

@@ -38,7 +38,7 @@ class PersonRepository
         throw new \LogicException('Person with Id: ' . $id . ' doesn\'t exists.');
     }
 
-    private function searchPerson(string $parameterName = null, string $searchValue = null):array
+    private function searchPerson(string $parameterName = null, string $searchValue = null): array
     {
         if ($parameterName === null) {
             $people = $this->repository->getAll(TableNamesStrategy::PERSON_KEY);
@@ -83,7 +83,7 @@ class PersonRepository
         return $matchedPersonList;
     }
 
-    public function persist(object $object)
+    public function persist(object $object): object
     {
         $persistStrategy = new CommandStrategy($object);
         foreach ($persistStrategy->dataToPersist() as $data) {
@@ -93,7 +93,7 @@ class PersonRepository
         return $object;
     }
 
-    public function remove(object $object)
+    public function remove(object $object): void
     {
         $persistStrategy = new CommandStrategy($object);
         foreach ($persistStrategy->dataToRemove() as $data) {

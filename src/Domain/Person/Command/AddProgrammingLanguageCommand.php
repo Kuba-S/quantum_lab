@@ -22,8 +22,11 @@ class AddProgrammingLanguageCommand implements Mappable
         return $this->name;
     }
 
-    public static function fromCliParams(array $params)
+    public static function fromCliParams(array $params): AddProgrammingLanguageCommand
     {
+        if (count($params) !== 1) {
+            throw new \InvalidArgumentException('Invalid number of arguments, must be "1". Given: ' . count($params) . '.');
+        }
         return new static($params[0]);
     }
 }

@@ -20,7 +20,8 @@
     "addPerson": {
       "class": "QL\\Domain\\Person\\Command\\AddPersonCommandHandler",
       "method": "addPerson",
-      "mapTo": "QL\\Domain\\Person\\Command\\AddPersonCommand"
+      "mapTo": "QL\\Domain\\Person\\Command\\AddPersonCommand",
+      "validator" : "QL\\Domain\\Person\\Command\\AddPersonCommandValidator"
     },
     "removePerson": {
       "class": "QL\\Domain\\Person\\Command\\RemovePersonCommandHandler",
@@ -30,7 +31,8 @@
     "addLanguage": {
       "class": "QL\\Domain\\Person\\Command\\AddProgrammingLanguageCommandHandler",
       "method": "addProgrammingLanguage",
-      "mapTo": "QL\\Domain\\Person\\Command\\AddProgrammingLanguageCommand"
+      "mapTo": "QL\\Domain\\Person\\Command\\AddProgrammingLanguageCommand",
+      "validator" : "QL\\Domain\\Person\\Command\\AddProgrammingLanguageCommandValidator"
     },
     "removeLanguage": {
       "class": "QL\\Domain\\Person\\Command\\RemoveProgrammingLanguageCommandHandler",

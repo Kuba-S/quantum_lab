@@ -3,11 +3,23 @@ declare(strict_types=1);
 
 namespace QL\Domain\Person\Command;
 
-class AddProgrammingLanguageCommandValidator
+use QL\Command\Validator;
+
+class AddProgrammingLanguageCommandValidator implements Validator
 {
-    public function validate(AddProgrammingLanguageCommand $addProgrammingLanguageCommand)
+    /**
+     * @var AddProgrammingLanguageCommand
+     */
+    private $addProgrammingLanguageCommand;
+
+    public function __construct(AddProgrammingLanguageCommand $addProgrammingLanguageCommand)
     {
-        if (empty($addProgrammingLanguageCommand->getName())) {
+        $this->addProgrammingLanguageCommand = $addProgrammingLanguageCommand;
+    }
+
+    public function validate(): void
+    {
+        if (empty($this->addProgrammingLanguageCommand->getName())) {
             $errorMessagesList[] = 'Programming language name cannot be empty';
         }
 

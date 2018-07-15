@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use QL\Command\CliRequest;
 use QL\Command\Mappable;
+use QL\Command\Validator;
 use QL\Domain\Person\Infrastructure\PersonRepository;
 use QL\Formatter\Formatter;
 use QL\Infrastructure\Repository;
@@ -25,12 +26,12 @@ class Application
         $this->loadRouting();
     }
 
-    public function setRepository(Repository $repository)
+    public function setRepository(Repository $repository): void
     {
         $this->repository = $repository;
     }
 
-    public function handleCliRequest(CliRequest $cliRequest)
+    public function handleCliRequest(CliRequest $cliRequest): void
     {
         if (!isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()])) {
             $this->presentOutput('No defined routing for command "' . $cliRequest->getCommandName() . '"');
@@ -47,11 +48,19 @@ class Application
         $handlerClass = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['class'];
         $handlerMethod = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['method'];
         $methodArguments = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['mapTo'] ?? $cliRequest->getArguments();
+        $validatorClassName = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['validator'] ?? null;
         $handlerClassInstance = new $handlerClass(new PersonRepository($this->repository));
         $handlerMethod .= 'Action';
 
         if ($methodArguments && is_a((string) $methodArguments, Mappable::class, true)) {
+            /** @var Mappable $methodArguments */
             $methodArguments = $methodArguments::fromCliParams($cliRequest->getArguments());
+        }
+
+        if ($validatorClassName && is_a((string) $validatorClassName, Validator::class, true)) {
+            /** @var Validator $validator */
+            $validator = new $validatorClassName($methodArguments);
+            $validator->validate();
         }
 
         $response = $handlerClassInstance->$handlerMethod($methodArguments);
@@ -73,11 +82,6 @@ class Application
         $this->config = $this->readJsonFile(self::CONFIG_FILE);
     }
 
-    public function getConfig(): array
-    {
-        return $this->config;
-    }
-
     private function loadRouting(): void
     {
         $this->routing = $this->readJsonFile(self::ROUTING_FILE);
@@ -89,7 +93,12 @@ class Application
         return json_decode($configFileContent, true);
     }
 
-    private function presentOutput($message)
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
+
+    private function presentOutput($message): void
     {
         $outputResource = fopen('php://output', 'w');
         if (false === @fwrite($outputResource, $message . PHP_EOL)) {

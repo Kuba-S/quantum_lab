@@ -17,7 +17,6 @@ class ProgrammingLanguageCliFormatter implements Formatter
 
     /**
      * @param ProgrammingLanguage[] $objectList
-     * @return string
      */
     public function formatMany(array $programmingLanguagesList): string
     {

@@ -51,7 +51,7 @@ class AddPersonCommand implements Mappable
         return $this->programmingLanguageList;
     }
 
-    public static function fromCliParams(array $params)
+    public static function fromCliParams(array $params): AddPersonCommand
     {
         if (count($params) < 3) {
             throw new \InvalidArgumentException('Invalid number of arguments, must be at least 3. Given: ' . count($params) . '.');

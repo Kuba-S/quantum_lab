@@ -21,7 +21,7 @@ class ProgrammingLanguage
         $this->name = $name;
     }
 
-    public static function fromArray($language)
+    public static function fromArray($language): ProgrammingLanguage
     {
         return new static($language['id'], $language['name']);
     }

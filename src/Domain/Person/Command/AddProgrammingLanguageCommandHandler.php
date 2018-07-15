@@ -18,10 +18,8 @@ class AddProgrammingLanguageCommandHandler
         $this->personRepository = $personRepository;
     }
 
-    public function addProgrammingLanguageAction(AddProgrammingLanguageCommand $addProgrammingLanguageCommand)
+    public function addProgrammingLanguageAction(AddProgrammingLanguageCommand $addProgrammingLanguageCommand): void
     {
-        $validator = new AddProgrammingLanguageCommandValidator();
-        $validator->validate($addProgrammingLanguageCommand);
         $programmingLanguage = $this->personRepository->getProgrammingLanguageByName($addProgrammingLanguageCommand->getName());
         if (!empty($programmingLanguage)) {
             throw new \DomainException('Programming language already exists');

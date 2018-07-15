@@ -33,7 +33,7 @@ class Person
     /**
      * @param ProgrammingLanguage[] $programmingLanguages
      */
-    public static function create(string $name, array $programmingLanguages)
+    public static function create(string $name, array $programmingLanguages): Person
     {
         return new self(md5((string) mt_rand()), $name, $programmingLanguages);
     }
