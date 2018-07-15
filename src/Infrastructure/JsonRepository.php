@@ -27,17 +27,12 @@ class JsonRepository implements Repository
 
         if (isset($data['id'])) {
             if ($data['id'] !== null && isset($jsonData[$tableKey][$data['id']])) {
-                throw new \InvalidArgumentException('Id: "' . $data['id'] . '" already exists.');
+                throw new \LogicException('Id: "' . $data['id'] . '" already exists.');
             }
             $this->dbData[$tableKey][$data['id']] = $data;
         } else {
             $this->dbData[$tableKey][] = $data;
         }
-    }
-
-    public function update(string $tableKey, string $id, array $parameters): void
-    {
-        // TODO: Implement update() method.
     }
 
     public function delete(string $tableKey, string $parameter, string $value): void
@@ -79,7 +74,7 @@ class JsonRepository implements Repository
     private function validateTableKey($tableKey): void
     {
         if (!isset($this->dbData[$tableKey])) {
-            throw new \InvalidArgumentException('Table "' . $tableKey . '" in database doesn\'t exists.');
+            throw new \LogicException('Table "' . $tableKey . '" in database doesn\'t exists.');
         }
     }
 

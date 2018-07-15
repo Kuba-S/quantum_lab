@@ -34,15 +34,15 @@ class Application
     public function handleCliRequest(CliRequest $cliRequest): void
     {
         if (!isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()])) {
-            $this->presentOutput('No defined routing for command "' . $cliRequest->getCommandName() . '"');
+            $this->presentOutput('No defined routing for command "' . $cliRequest->getCommandName() . '".');
         }
 
         if (!isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['class'])) {
-            $this->presentOutput('No defined handler for routing "' . $cliRequest->getCommandName() . '"');
+            $this->presentOutput('No defined handler for routing "' . $cliRequest->getCommandName() . '".');
         }
 
         if (!isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['method'])) {
-            $this->presentOutput('No defined method for routing "' . $cliRequest->getCommandName() . '"');
+            $this->presentOutput('No defined method for routing "' . $cliRequest->getCommandName() . '".');
         }
 
         $handlerClass = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['class'];
@@ -52,28 +52,33 @@ class Application
         $handlerClassInstance = new $handlerClass(new PersonRepository($this->repository));
         $handlerMethod .= 'Action';
 
-        if ($methodArguments && is_a((string) $methodArguments, Mappable::class, true)) {
-            /** @var Mappable $methodArguments */
-            $methodArguments = $methodArguments::fromCliParams($cliRequest->getArguments());
+        try {
+            if ($methodArguments && is_a((string)$methodArguments, Mappable::class, true)) {
+                /** @var Mappable $methodArguments */
+                $methodArguments = $methodArguments::fromCliParams($cliRequest->getArguments());
+            }
+
+            if ($validatorClassName && is_a((string)$validatorClassName, Validator::class, true)) {
+                /** @var Validator $validator */
+                $validator = new $validatorClassName($methodArguments);
+                $validator->validate();
+            }
+
+            $response = $handlerClassInstance->$handlerMethod($methodArguments);
+            if (
+                isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['formatter'])
+                && is_a((string)$this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['formatter'],
+                    Formatter::class, true)
+            ) {
+                $formatterClassName = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['formatter'];
+                /** @var Formatter $formatter */
+                $formatter = new $formatterClassName();
+                $response = is_array($response) ? $formatter->formatMany($response) : $formatter->formatOne($response);
+            }
+        } catch (\InvalidArgumentException $e) {
+            $response = $e->getMessage();
         }
 
-        if ($validatorClassName && is_a((string) $validatorClassName, Validator::class, true)) {
-            /** @var Validator $validator */
-            $validator = new $validatorClassName($methodArguments);
-            $validator->validate();
-        }
-
-        $response = $handlerClassInstance->$handlerMethod($methodArguments);
-
-        if (
-            isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['formatter'])
-            && is_a((string) $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['formatter'], Formatter::class, true)
-        ) {
-            $formatterClassName = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['formatter'];
-            /** @var Formatter $formatter */
-            $formatter = new $formatterClassName();
-            $response = is_array($response) ? $formatter->formatMany($response) : $formatter->formatOne($response);
-        }
         $this->presentOutput($response);
     }
 

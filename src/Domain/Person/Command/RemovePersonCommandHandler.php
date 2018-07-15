@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace QL\Domain\Person\Command;
 
 use QL\Domain\Person\Infrastructure\PersonRepository;
+use QL\Exception\ValidationException;
 
 class RemovePersonCommandHandler
 {
@@ -21,7 +22,7 @@ class RemovePersonCommandHandler
     {
         $person = $this->personRepository->getPersonById($removePersonCommand->getId());
         if (empty($person)) {
-            throw new \InvalidArgumentException('Person with Id: "' . $removePersonCommand->getId() . '" doesn\'t exists.');
+            throw new ValidationException('Person with Id: "' . $removePersonCommand->getId() . '" doesn\'t exists.');
         }
 
         $this->personRepository->remove($person);

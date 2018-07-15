@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace QL\Domain\Person\Command;
 
 use QL\Command\Validator;
+use QL\Exception\ValidationException;
 
 class AddPersonCommandValidator implements Validator
 {
@@ -34,7 +35,7 @@ class AddPersonCommandValidator implements Validator
         }
 
         if (!empty($errorMessagesList)) {
-            throw new \InvalidArgumentException(implode(PHP_EOL, $errorMessagesList));
+            throw new ValidationException(implode(PHP_EOL, $errorMessagesList));
         }
     }
 }

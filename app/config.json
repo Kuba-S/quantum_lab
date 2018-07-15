@@ -1,5 +1,6 @@
 {
   "db": {
     "file": "/Volumes/test/projektyPhp/QuantumLab/db.json"
-  }
+  },
+  "debug_mode": false
 }

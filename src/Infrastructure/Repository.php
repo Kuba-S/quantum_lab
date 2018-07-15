@@ -7,8 +7,6 @@ interface Repository
 {
     public function add(string $tableKey, array $data): void;
 
-    public function update(string $tableKey, string $id, array $parameters): void;
-
     public function delete(string $tableKey, string $parameter, string $value): void;
 
     public function getAll(string $tableKey): array;

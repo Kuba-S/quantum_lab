@@ -5,6 +5,7 @@ namespace QL\Domain\Person\Command;
 
 use QL\Domain\Person\DomainModel\ProgrammingLanguage;
 use QL\Domain\Person\Infrastructure\PersonRepository;
+use QL\Exception\ValidationException;
 
 class AddProgrammingLanguageCommandHandler
 {
@@ -22,7 +23,7 @@ class AddProgrammingLanguageCommandHandler
     {
         $programmingLanguage = $this->personRepository->getProgrammingLanguageByName($addProgrammingLanguageCommand->getName());
         if (!empty($programmingLanguage)) {
-            throw new \DomainException('Programming language already exists');
+            throw new ValidationException('Programming language already exists');
         }
         $this->personRepository->persist(ProgrammingLanguage::create($addProgrammingLanguageCommand->getName()));
     }
