@@ -8,7 +8,7 @@ use QL\Infrastructure\JsonRepository;
 
 set_time_limit(0);
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/src/autoload.php';
 
 $cliRequest = CliRequest::fromArgv($argv);
 
