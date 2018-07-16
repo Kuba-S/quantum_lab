@@ -5,6 +5,8 @@ namespace QL\Infrastructure;
 
 class JsonRepository implements Repository
 {
+    private const BASE_JSON_STRUCTURE = '{"person":[],"person_programming_languages":[],"programming_languages":[]}';
+
     /**
      * @var string
      */
@@ -17,7 +19,7 @@ class JsonRepository implements Repository
 
     public function __construct(string $jsonFilePath)
     {
-        $this->jsonFilePath = $jsonFilePath;
+        $this->jsonFilePath = __DIR__ . '/../..' . $jsonFilePath;
         $this->loadData();
     }
 
@@ -67,8 +69,21 @@ class JsonRepository implements Repository
 
     private function loadData(): void
     {
-        $jsonData = file_get_contents(__DIR__ . '/../..' . $this->jsonFilePath);
+        $jsonData = file_get_contents($this->jsonFilePath);
+        if (empty($jsonData)) {
+            $this->createJsonBaseStructure();
+            $jsonData = file_get_contents($this->jsonFilePath);
+        }
         $this->dbData = json_decode($jsonData, true);
+
+        if ($this->dbData === null) {
+            throw new \LogicException('Db file is corrupted.');
+        }
+    }
+
+    private function createJsonBaseStructure(): void
+    {
+        file_put_contents($this->jsonFilePath, self::BASE_JSON_STRUCTURE);
     }
 
     private function validateTableKey($tableKey): void
