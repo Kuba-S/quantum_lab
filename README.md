@@ -16,3 +16,22 @@ Application allows to define request mappings, validators and response formattin
     "validator" : "QL\\Domain\\Person\\ReadModel\\FindPersonByNameQueryValidator"
 }
 ```
+# Usage examples
+```
+./demo.php list
+
+./demo.php find "Kowalski"
+./demo.php find "Jan"
+./demo.php find "Jan Kowalski"
+./demo.php find "Jan K"
+./demo.php find "an Kowal"
+
+./demo.php languages php java
+./demo.php addPerson Imię Nazwisko język1 język2 
+
+./demo.php removePerson ID
+
+./demo.php addLanguage nazwa
+
+/demo.php removeLanguage nazwa
+```
