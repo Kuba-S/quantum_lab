@@ -67,7 +67,7 @@ class JsonRepository implements Repository
 
     private function loadData(): void
     {
-        $jsonData = file_get_contents($this->jsonFilePath);
+        $jsonData = file_get_contents(__DIR__ . '/../..' . $this->jsonFilePath);
         $this->dbData = json_decode($jsonData, true);
     }
 
