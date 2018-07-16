@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace QL\Domain\Person\Command;
 
-use QL\Command\Mappable;
+use QL\Application\Mappable;
 
 class RemovePersonCommand implements Mappable
 {

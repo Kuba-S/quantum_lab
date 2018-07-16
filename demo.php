@@ -1,7 +1,9 @@
+#!/usr/bin/php
 <?php
 declare(strict_types=1);
 
-use QL\Command\CliRequest;
+use QL\Application\Application;
+use QL\Application\CliRequest;
 use QL\Infrastructure\JsonRepository;
 
 set_time_limit(0);

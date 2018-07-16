@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace QL\Command;
+namespace QL\Application;
 
 interface Mappable
 {

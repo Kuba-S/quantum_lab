@@ -1,17 +1,16 @@
 <?php
 declare(strict_types=1);
 
-use QL\Command\CliRequest;
-use QL\Command\Mappable;
-use QL\Command\Validator;
+namespace QL\Application;
+
 use QL\Domain\Person\Infrastructure\PersonRepository;
 use QL\Formatter\Formatter;
 use QL\Infrastructure\Repository;
 
 class Application
 {
-    private const CONFIG_FILE = 'app/config.json';
-    private const ROUTING_FILE = 'app/routing.json';
+    private const CONFIG_FILE = '/../../config/config.json';
+    private const ROUTING_FILE = '/../../config/routing.json';
     private const CLI_ROUTING_PARAMETER = 'cli';
 
     private $config = [];
@@ -81,17 +80,17 @@ class Application
 
     private function loadConfiguration(): void
     {
-        $this->config = $this->readJsonFile(self::CONFIG_FILE);
+        $this->config = $this->readJsonFile(__DIR__ . self::CONFIG_FILE);
     }
 
     private function loadRouting(): void
     {
-        $this->routing = $this->readJsonFile(self::ROUTING_FILE);
+        $this->routing = $this->readJsonFile(__DIR__ . self::ROUTING_FILE);
     }
 
     private function readJsonFile(string $file): ?array
     {
-        $configFileContent = file_get_contents(__DIR__ . '/../' . $file);
+        $configFileContent = file_get_contents($file);
         return json_decode($configFileContent, true);
     }
 
@@ -104,7 +103,7 @@ class Application
     {
         $outputResource = fopen('php://output', 'w');
         if (false === @fwrite($outputResource, $message . PHP_EOL)) {
-            throw new RuntimeException('Unable to write output.');
+            throw new \RuntimeException('Unable to write output.');
         }
 
         fflush($outputResource);
