@@ -25,6 +25,11 @@ class RemoveProgrammingLanguageCommandHandler
             throw new ValidationException('Programming language: "' . $removeProgrammingLanguageCommand->getName() . '" doesn\'t exists.');
         }
 
+        $peopleWithProgrammingLanguage = $this->personRepository->searchPersonByProgrammingLanguage([$programmingLanguage->getName()]);
+        if (!empty($peopleWithProgrammingLanguage)) {
+            throw new ValidationException('Programming language: "' . $removeProgrammingLanguageCommand->getName() . '" in use.');
+        }
+
         $this->personRepository->remove($programmingLanguage);
         return 'OK';
     }

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace QL\Domain\Person\Command;
 
-use QL\Command\Validator;
+use QL\Application\Validator;
 use QL\Exception\ValidationException;
 
 class AddPersonCommandValidator implements Validator
@@ -20,7 +20,7 @@ class AddPersonCommandValidator implements Validator
 
     public function validate(): void
     {
-        if (empty($this->addPersonCommand->getFirstName()) || !ctype_alpha($this->addPersonCommand->getFirstName())) {
+        if (empty($this->addPersonCommand->getFirstName()) || !preg_match('/^[A-ZĄĆĘŁŃÓŚŹŻ]*$/iu', $this->addPersonCommand->getFirstName())) {
             $errorMessagesList[] = 'First name cannot be empty and must contain only alphabetic characters';
         }
 

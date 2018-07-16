@@ -13,7 +13,7 @@ class RelationsStrategy
      */
     private $object;
 
-    public function __construct(object $object)
+    public function __construct($object)
     {
         $this->object = $object;
     }

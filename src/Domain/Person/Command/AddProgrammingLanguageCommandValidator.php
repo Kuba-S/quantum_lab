@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace QL\Domain\Person\Command;
 
-use QL\Command\Validator;
+use QL\Application\Validator;
 use QL\Exception\ValidationException;
 
 class AddProgrammingLanguageCommandValidator implements Validator

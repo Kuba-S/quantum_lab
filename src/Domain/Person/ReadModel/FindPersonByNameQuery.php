@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace QL\Domain\Person\ReadModel;
 
-use QL\Command\Mappable;
+use QL\Application\Mappable;
 
 class FindPersonByNameQuery implements Mappable
 {

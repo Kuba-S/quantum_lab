@@ -1,6 +1,5 @@
 {
   "db": {
     "file": "/db.json"
-  },
-  "debug_mode": false
+  }
 }

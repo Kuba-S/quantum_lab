@@ -3,7 +3,7 @@ spl_autoload_register(
     function($class) {
         static $classes = null;
         if ($classes === null) {
-            $classes = array(
+            $classes = [
                 'ql\\application\\application' => '/Application/Application.php',
                 'ql\\application\\clirequest' => '/Application/CliRequest.php',
                 'ql\\application\\mappable' => '/Application/Mappable.php',
@@ -31,7 +31,7 @@ spl_autoload_register(
                 'ql\\formatter\\programminglanguagecliformatter' => '/Formatter/ProgrammingLanguageCliFormatter.php',
                 'ql\\infrastructure\\jsonrepository' => '/Infrastructure/JsonRepository.php',
                 'ql\\infrastructure\\repository' => '/Infrastructure/Repository.php'
-            );
+            ];
         }
         $cn = strtolower($class);
         if (isset($classes[$cn])) {

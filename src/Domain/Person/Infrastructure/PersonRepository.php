@@ -99,7 +99,7 @@ class PersonRepository
         }
     }
 
-    public function persist(object $object): object
+    public function persist($object)
     {
         $persistStrategy = new RelationsStrategy($object);
         foreach ($persistStrategy->add() as $data) {
@@ -109,7 +109,7 @@ class PersonRepository
         return $object;
     }
 
-    public function remove(object $object): void
+    public function remove($object): void
     {
         $persistStrategy = new RelationsStrategy($object);
         foreach ($persistStrategy->remove() as $data) {

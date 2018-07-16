@@ -2,41 +2,41 @@
   "cli": {
     "list": {
       "class": "QL\\Domain\\Person\\ReadModel\\FindPersonHandler",
-      "method": "getAllPeople",
+      "method": "getAllPeopleAction",
       "formatter": "QL\\Formatter\\PersonCliFormatter"
     },
     "find": {
       "class": "QL\\Domain\\Person\\ReadModel\\FindPersonHandler",
-      "method": "findPersonByName",
+      "method": "findPersonByNameAction",
       "mapTo": "QL\\Domain\\Person\\ReadModel\\FindPersonByNameQuery",
       "formatter": "QL\\Formatter\\PersonCliFormatter"
     },
     "languages": {
       "class": "QL\\Domain\\Person\\ReadModel\\FindPersonHandler",
-      "method": "findPersonByProgrammingLanguages",
+      "method": "findPersonByProgrammingLanguagesAction",
       "mapTo": "QL\\Domain\\Person\\ReadModel\\FindPersonByProgrammingLanguagesQuery",
       "formatter": "QL\\Formatter\\PersonCliFormatter"
     },
     "addPerson": {
       "class": "QL\\Domain\\Person\\Command\\AddPersonCommandHandler",
-      "method": "addPerson",
+      "method": "addPersonAction",
       "mapTo": "QL\\Domain\\Person\\Command\\AddPersonCommand",
       "validator" : "QL\\Domain\\Person\\Command\\AddPersonCommandValidator"
     },
     "removePerson": {
       "class": "QL\\Domain\\Person\\Command\\RemovePersonCommandHandler",
-      "method": "removePerson",
+      "method": "removePersonAction",
       "mapTo": "QL\\Domain\\Person\\Command\\RemovePersonCommand"
     },
     "addLanguage": {
       "class": "QL\\Domain\\Person\\Command\\AddProgrammingLanguageCommandHandler",
-      "method": "addProgrammingLanguage",
+      "method": "addProgrammingLanguageAction",
       "mapTo": "QL\\Domain\\Person\\Command\\AddProgrammingLanguageCommand",
       "validator" : "QL\\Domain\\Person\\Command\\AddProgrammingLanguageCommandValidator"
     },
     "removeLanguage": {
       "class": "QL\\Domain\\Person\\Command\\RemoveProgrammingLanguageCommandHandler",
-      "method": "removeProgrammingLanguage",
+      "method": "removeProgrammingLanguageAction",
       "mapTo": "QL\\Domain\\Person\\Command\\RemoveProgrammingLanguageCommand"
     }
   }

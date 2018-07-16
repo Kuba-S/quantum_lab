@@ -33,24 +33,13 @@ class Application
     public function handleCliRequest(CliRequest $cliRequest): void
     {
         try {
-            if (!isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()])) {
-                throw new \InvalidArgumentException('No defined routing for command "' . $cliRequest->getCommandName() . '".');
-            }
+            $this->validateRequireRoutingFields(self::CLI_ROUTING_PARAMETER, $cliRequest->getCommandName());
 
-            if (!isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['class'])) {
-                throw new \InvalidArgumentException('No defined handler for routing "' . $cliRequest->getCommandName() . '".');
-            }
-
-            if (!isset($this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['method'])) {
-                throw new \InvalidArgumentException('No defined method for routing "' . $cliRequest->getCommandName() . '".');
-            }
-
-            $handlerClass = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['class'];
+            $handlerClassName = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['class'];
             $handlerMethod = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['method'];
             $methodArguments = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['mapTo'] ?? $cliRequest->getArguments();
             $validatorClassName = $this->routing[self::CLI_ROUTING_PARAMETER][$cliRequest->getCommandName()]['validator'] ?? null;
-            $handlerClassInstance = new $handlerClass(new PersonRepository($this->repository));
-            $handlerMethod .= 'Action';
+            $handlerClassInstance = new $handlerClassName(new PersonRepository($this->repository));
 
             if ($methodArguments && is_a((string)$methodArguments, Mappable::class, true)) {
                 /** @var Mappable $methodArguments */
@@ -78,6 +67,26 @@ class Application
         $this->presentOutput($response);
     }
 
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
+
+    private function validateRequireRoutingFields(string $requestType, string $commandName): void
+    {
+        if (!isset($this->routing[$requestType][$commandName])) {
+            throw new \InvalidArgumentException('No defined routing for command "' . $commandName . '".');
+        }
+
+        if (!isset($this->routing[$requestType][$commandName]['class'])) {
+            throw new \InvalidArgumentException('No defined handler for routing "' . $commandName . '".');
+        }
+
+        if (!isset($this->routing[$requestType][$commandName]['method'])) {
+            throw new \InvalidArgumentException('No defined method for routing "' . $commandName . '".');
+        }
+    }
+
     private function loadConfiguration(): void
     {
         $this->config = $this->readJsonFile(__DIR__ . self::CONFIG_FILE);
@@ -94,11 +103,6 @@ class Application
         return json_decode($configFileContent, true);
     }
 
-    public function getConfig(): array
-    {
-        return $this->config;
-    }
-
     private function presentOutput($message): void
     {
         $outputResource = fopen('php://output', 'w');
@@ -108,5 +112,4 @@ class Application
 
         fflush($outputResource);
     }
-
 }
